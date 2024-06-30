@@ -54,7 +54,7 @@ ar_js_code = """
 
 st.title('AR Character Viewer (Marker Based)')
 st.write('This app displays a 3D box using a marker image.')
-st.image('path/to/your/marker.jpg', width=200)
+st.image('marker.png', width=200)
 st.write("Point your device camera at the marker image above to see the 3D box in AR!")
 
 # Display the AR.js code within Streamlit
