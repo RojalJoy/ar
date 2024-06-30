@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AR Session</title>
+    <style>
+        body { margin: 0; overflow: hidden; }
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+    <script>
+        // WebXR and AR JavaScript code goes here
+        // This is a simplified version. You should include your AR setup and rendering code here.
+        document.addEventListener('DOMContentLoaded', (event) => {
+            if (navigator.xr) {
+                navigator.xr.requestSession('immersive-ar').then((session) => {
+                    // Set up AR session here
+                }).catch((err) => {
+                    console.error('Failed to start AR session:', err);
+                });
+            } else {
+                console.error('WebXR not supported');
+            }
+        });
+    </script>
+</body>
+</html>
