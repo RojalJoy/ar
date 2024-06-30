@@ -4,7 +4,7 @@ import streamlit.components.v1 as components
 st.title('AR Character Viewer')
 st.write('This app loads and displays AR characters.')
 
-# Three.js code to create and render a 3D box
+# Three.js code to create and render a 3D box in AR
 three_js_code = """
 <!DOCTYPE html>
 <html>
@@ -16,30 +16,53 @@ three_js_code = """
 </head>
 <body>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
     <script>
-        var scene = new THREE.Scene();
-        var camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
-        var renderer = new THREE.WebGLRenderer();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        document.body.appendChild(renderer.domElement);
+        // Check for WebXR support
+        if (navigator.xr) {
+            navigator.xr.isSessionSupported('immersive-ar').then(function (supported) {
+                if (supported) {
+                    // Setup Three.js scene
+                    var scene = new THREE.Scene();
+                    var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+                    var renderer = new THREE.WebGLRenderer({ alpha: true });
+                    renderer.setSize(window.innerWidth, window.innerHeight);
+                    renderer.xr.enabled = true;
+                    document.body.appendChild(renderer.domElement);
 
-        var geometry = new THREE.BoxGeometry();
-        var material = new THREE.MeshBasicMaterial({color: 0x00ff00});
-        var cube = new THREE.Mesh(geometry, material);
-        scene.add(cube);
+                    // Create a box
+                    var geometry = new THREE.BoxGeometry(0.1, 0.1, 0.1);
+                    var material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+                    var cube = new THREE.Mesh(geometry, material);
+                    scene.add(cube);
 
-        camera.position.z = 5;
+                    // Setup WebXR
+                    navigator.xr.requestSession('immersive-ar', {
+                        requiredFeatures: ['local-floor'],
+                        optionalFeatures: ['bounded-floor']
+                    }).then(function (session) {
+                        renderer.xr.setSession(session);
 
-        var animate = function () {
-            requestAnimationFrame(animate);
+                        var controller = renderer.xr.getController(0);
+                        scene.add(controller);
 
-            cube.rotation.x += 0.01;
-            cube.rotation.y += 0.01;
+                        session.requestAnimationFrame(function animate() {
+                            session.requestAnimationFrame(animate);
+                            renderer.render(scene, camera);
+                        });
 
-            renderer.render(scene, camera);
-        };
-
-        animate();
+                        controller.addEventListener('select', function () {
+                            cube.position.set(0, 0, -0.5).applyMatrix4(controller.matrixWorld);
+                            cube.visible = !cube.visible;
+                        });
+                    });
+                } else {
+                    document.body.innerHTML = '<h1>WebXR not supported</h1>';
+                }
+            });
+        } else {
+            document.body.innerHTML = '<h1>WebXR not supported</h1>';
+        }
     </script>
 </body>
 </html>
@@ -48,4 +71,4 @@ three_js_code = """
 # Display the HTML content in Streamlit
 components.html(three_js_code, height=600)
 
-st.write("Rendered 3D Box")
+st.write("Rendered 3D Model in AR")
