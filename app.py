@@ -26,7 +26,7 @@ ar_js_code = """
       var box = new THREE.Mesh(geometry, material);
 
       // Initialize AR.js tracker with marker image path
-     
+      const marker = new ARMarker(renderer, { patternURL: 'marker.png' });
       scene.add(marker);
       scene.add(box); // Add the box to the scene
 
