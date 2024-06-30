@@ -1,0 +1,31 @@
+<!-- index.html -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        // JavaScript code for AR functionality using A-Frame or Three.js
+        AFRAME.registerComponent('ar-scene', {
+            init: function () {
+                // Initialize AR scene with 3D models and interactions
+                // Use WebXR APIs to place objects in the real world
+                this.el.sceneEl.xrSession.addEventListener('end', () => {
+                    // Handle session end if necessary
+                });
+            }
+        });
+    </script>
+</head>
+<body>
+    <a-scene ar-scene embedded>
+        <!-- AR scene setup -->
+        <a-box position="0 0 -5" color="red"></a-box>
+        <a-sphere position="0 1.25 -5" radius="1.25" color="blue"></a-sphere>
+        <a-cylinder position="2 0.75 -5" radius="0.5" height="1.5" color="green"></a-cylinder>
+        <a-plane position="0 0 -5" rotation="-90 0 0" width="4" height="4" color="#7BC8A4"></a-plane>
+        <a-sky color="#ECECEC"></a-sky>
+    </a-scene>
+</body>
+</html>
