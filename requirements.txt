@@ -1,3 +1,7 @@
 streamlit
 open3d
 pythreejs
+ipywidgets 
+IPython 
+nbconvert 
+
