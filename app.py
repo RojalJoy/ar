@@ -16,9 +16,7 @@ three_js_code = """
 </head>
 <body>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
     <script>
-        // Check for WebXR support
         if (navigator.xr) {
             navigator.xr.isSessionSupported('immersive-ar').then(function (supported) {
                 if (supported) {
@@ -36,24 +34,23 @@ three_js_code = """
                     var cube = new THREE.Mesh(geometry, material);
                     scene.add(cube);
 
-                    // Setup WebXR
+                    // Setup WebXR session
                     navigator.xr.requestSession('immersive-ar', {
-                        requiredFeatures: ['local-floor'],
-                        optionalFeatures: ['bounded-floor']
+                        requiredFeatures: ['local-floor']
                     }).then(function (session) {
                         renderer.xr.setSession(session);
 
                         var controller = renderer.xr.getController(0);
                         scene.add(controller);
 
-                        session.requestAnimationFrame(function animate() {
+                        var animate = function () {
                             session.requestAnimationFrame(animate);
                             renderer.render(scene, camera);
-                        });
+                        };
+                        animate();
 
                         controller.addEventListener('select', function () {
                             cube.position.set(0, 0, -0.5).applyMatrix4(controller.matrixWorld);
-                            cube.visible = !cube.visible;
                         });
                     });
                 } else {
